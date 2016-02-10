@@ -1,0 +1,29 @@
+<section>
+  <div class="page-header">
+    <h1 ng-bind="vm.customer.surName"></h1>
+  </div>
+  <div class="pull-right" ng-show="vm.authentication.user._id == vm.customer.user._id">
+    <a class="btn btn-primary"  ng-click= "vm.modalUpdate('lg')">
+
+      Update Customer
+    </a>
+    <a class="btn btn-primary" ng-click="vm.remove()">
+      <i class="glyphicon glyphicon-trash"></i>
+    </a>
+  </div>
+  <!--<div>-->
+    <!--<a class="btn btn-primary" ng-click="vm.modalUpdate('lg')">-->
+      <!--Update Customer-->
+    <!--</a>-->
+  <!--</div>-->
+  <small>
+    <em class="text-muted">
+      Created on
+      <span ng-bind="vm.customer.created | date:'mediumDate'"></span>
+      by
+      <span ng-if="vm.customer.user" ng-bind="vm.customer.user.displayName"></span>
+      <span ng-if="!vm.customer.user">Deleted User</span>
+    </em>
+  </small>
+  <p class="lead" ng-bind="vm.customer.firstName"></p>
+</section>
