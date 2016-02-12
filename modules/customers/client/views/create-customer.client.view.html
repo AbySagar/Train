@@ -1,0 +1,121 @@
+<section ng-controller="CustomersCreateController as vm">
+
+
+  <div class="modal-header">
+    <h3 class="modal-title">Create </h3>
+  </div>
+  <div class="modal-body">
+
+
+    <form name="vm.form.customerForm" >
+      <fieldset>
+        <div class="row">
+          <div class="col-sm-6 text-center">
+            <i class="glyphicon glyphicon-user cust-profile"
+               ng-class="{'text-primary':customer.referred,'text-pink':!customer.referred}"></i>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group" show-errors>
+              <label class="control-label" for="firstName">firstName</label>
+              <input name="firstName" type="text" ng-model="vm.customer.firstName" id="firstName"
+                     class="form-control" required>
+              <div ng-messages="vm.form.customerForm.firstName.$error" role="alert">
+                <p class="help-block error-text" ng-message="required">Customer firstName is required.</p>
+              </div>
+            </div>
+            <div class="form-group" show-errors>
+              <label class="control-label" for="surName">surName</label>
+              <input name="surName" type="text" ng-model="customer.surName" id="surName" class="form-control"
+                     required>
+              <div ng-messages="vm.form.customerForm.surName.$error" role="alert">
+                <p class="help-block error-text" ng-message="required">Customer surName is required.</p>
+              </div>
+            </div>
+            <div class="form-group" show-errors>
+              <label class="control-label" for="suburb">suburb</label>
+              <input name="suburb" type="text" ng-model="vm.customer.suburb" id="suburb" class="form-control"
+                     required>
+              <div ng-messages="vm.form.customerForm.suburb.$error" role="alert">
+                <p class="help-block error-text" ng-message="required">Customer suburb is required.</p>
+              </div>
+            </div>
+            <div class="form-group" show-errors>
+              <label class="control-label" for="country">country</label>
+              <input name="country" type="text" ng-model="customer.country" id="country" class="form-control"
+                     required>
+              <div ng-messages="vm.form.customerForm.country.$error" role="alert">
+                <p class="help-block error-text" ng-message="required">Customer country is required.</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6 col-sm-push-6">
+            <div class="form-group" show-errors>
+              <label class="control-label" for="phone">phone</label>
+              <input name="phone" type="number" ng-model="vm.customer.phone" id="phone" class="form-control" required>
+              <div ng-messages="vm.form.customerForm.phone.$error" role="alert">
+                <p class="help-block error-text" ng-message="required">Customer phone is required.</p>
+              </div>
+            </div>
+            <div class="form-group" show-errors>
+              <label class="control-label" for="email">email</label>
+              <input name="email" type="text" ng-model="customer.email" id="email" class="form-control" required>
+              <div ng-messages="vm.form.customerForm.email.$error" role="alert">
+                <p class="help-block error-text" ng-message="required">Customer email is required.</p>
+              </div>
+            </div>
+
+          </div>
+          <div class="col-sm-6 col-sm-pull-6">
+            <div class="form-group" show-errors>
+              <label class="control-label" for="referred">referred</label>
+              <input name="referred" type="checkbox" ng-model="customer.referred" id="referred"
+                     class="checkbox-left form-control ">
+              <div ng-messages="vm.form.customerForm.referred.$error" role="alert">
+                <p class="help-block error-text" ng-message="required">Customer referred is required.</p>
+              </div>
+            </div>
+            <div class="form-group" show-errors>
+              <label class="control-label" for="channel">channel</label>
+              <input name="channel" type="text" ng-model="customer.channel" id="channel" class="form-control"
+                     required>
+              <div ng-messages="vm.form.customerForm.channel.$error" role="alert">
+                <p class="help-block error-text" ng-message="required">Customer channel is required.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="form-group" show-errors>
+              <label class="control-label" for="industry">industry</label>
+              <input name="industry" type="input" ng-model="customer.industry" id="industry" class="form-control"
+                     required>
+              <div ng-messages="vm.form.customerForm.industry.$error" role="alert">
+                <p class="help-block error-text" ng-message="required">Customer industry is required.</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+
+        <div ng-show="vm.error" class="text-danger">
+          <strong ng-bind="vm.error"></strong>
+        </div>
+      </fieldset>
+    </form>
+
+
+  </div>
+
+  <div class="modal-footer">
+    <button class="btn btn-success btn-lg" type="button" ng-disabled="vm.form.customerForm.$invalid "
+            ng-click="vm.save(vm.form.customerForm.$valid); ok() ">Create & Close</button>
+    <button class="btn btn-warning btn-lg" type="button" ng-click="cancel()">Cancel</button>
+  </div>
+
+
+</section>

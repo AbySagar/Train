@@ -1,0 +1,31 @@
+<div class="list-group">
+  <div class="col-xs-6 col-sm-4 extra_space" ng-repeat="customer in CLCtrl.customers | filter:searchText">
+
+    <a ui-sref="customers.view({ customerId: customer._id })" class="list-group-item ">
+      <h4 class="cust-list text-center">
+        <i class="glyphicon glyphicon-user  "
+           ng-class="{'text-primary':customer.referred,'text-danger':!customer.referred}"></i>
+      </h4>
+
+      <div class="row ">
+        <div class="col-xs-10 col-xs-offset-1">
+          <h4>
+            <b>{{customer.firstName}} {{customer.surName}}</b>
+          </h4>
+          <small class="list-group-item-text ">
+            Created on
+            <span ng-bind="customer.created | date:'mediumDate'"></span>
+            by
+            <span ng-if="customer.user" ng-bind="customer.user.displayName"></span>
+            <span ng-if="!customer.user">Deleted User</span>
+          </small>
+        </div>
+      </div>
+
+    </a>
+  </div>
+
+</div>
+<div class="alert alert-warning text-center" ng-if="CLCtrl.customers.$resolved && !CLCtrl.customers.length">
+  No customers yet, why don't you <a ui-sref="customers.create">create one</a>?
+</div>
