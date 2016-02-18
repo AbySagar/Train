@@ -4,8 +4,14 @@ angular
   .controller('CustomersUpdateController', ['$scope', '$state','$log',
     function ($scope, $state,$log) {
       var vm = this;
+      $scope.channelOptions = [
+        { id: 1, item: 'facebook' },
+        { id: 2, item: 'twitter' },
+        { id: 3, item: 'localemail' }
 
+      ];
       vm.customer = $scope.customer;
+      vm.ok=$scope.ok;
 
       vm.error = null;
       vm.form = {};
@@ -34,6 +40,8 @@ angular
 
         vm.customer.$update(successCallback, errorCallback);
         $log.info(vm.customer.firstName);
+        $scope.error=vm.error;
+
         //} else {
         //  vm.customer.$save(successCallback, errorCallback);
         // }

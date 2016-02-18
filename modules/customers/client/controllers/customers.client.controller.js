@@ -6,9 +6,9 @@
     .controller('CustomersController', CustomersController);
 
 
-  CustomersController.$inject = ['$scope', '$state', 'customerResolve', 'Authentication','$modal','$log'];
+  CustomersController.$inject = ['$scope', '$state', 'customerResolve', 'Authentication','$modal','$log','CustomersService'];
 
-  function CustomersController($scope, $state, customer, Authentication,$modal,$log) {
+  function CustomersController($scope, $state, customer, Authentication,$modal,$log,CustomersService) {
     var vm = this;
 
     vm.customer = customer;
@@ -19,12 +19,15 @@
     vm.save = save;
     vm.modalUpdate=modalUpdate;
 
+
     // Remove existing Customer
     function remove() {
       if (confirm('Are you sure you want to delete?')) {
         vm.customer.$remove($state.go('customers.list'));
       }
     }
+
+
 
     function modalUpdate(size) {
 
@@ -83,6 +86,7 @@
   function modalInstanceCtrl($scope, $modalInstance, customer) {
     $scope.customer = customer;
     $scope.ok = function () {
+      //if(!$scope.error)
       $modalInstance.close($scope.customer);
     };
 

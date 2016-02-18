@@ -16,3 +16,14 @@
 .topmargin{
     margin-top: 10px;
 }
+
+.text-pink{
+    color: #ec407a;
+}
+.extra_space{
+    margin-top: 25px;
+}
+
+input[type="checkbox"] {
+    margin: 0 0 0;
+}

@@ -150,12 +150,12 @@ ApplicationConfiguration.registerModule('users.admin.routes', ['core.admin.route
   menuConfig.$inject = ['Menus'];
 
   function menuConfig(Menus) {
-    /*Menus.addMenuItem('topbar', {
-      title: 'Articles',
-      state: 'articles',
-      type: 'dropdown',
-      roles: ['*']
-    });*/
+    //Menus.addMenuItem('topbar', {
+    //  title: 'Articles',
+    //  state: 'articles',
+    //  type: 'dropdown',
+    //  roles: ['*']
+    //});
 
     // Add the dropdown list item
     Menus.addSubMenuItem('topbar', 'articles', {
@@ -1008,7 +1008,7 @@ angular.module('core').service('Socket', ['Authentication', '$state', '$timeout'
         url: '',
         templateUrl: 'modules/customers/client/views/list-customers.client.view.html',
         controller: 'CustomersListController',
-        controllerAs: 'vm'
+        controllerAs: 'CLCtrl'
       })
       .state('customers.create', {
         url: '/create',
@@ -1060,6 +1060,61 @@ angular.module('core').service('Socket', ['Authentication', '$state', '$timeout'
   }
 })();
 
+'use strict';
+angular
+  .module('customers')
+  .controller('CustomersCreateController', ['$scope', '$state','$log','Notify',
+    function ($scope, $state,$log,Notify) {
+      var vm = this;
+
+      vm.customer = $scope.customer;
+      vm.ok=$scope.ok;
+
+      vm.error = null;
+      vm.form = {};
+      //
+      vm.save = save;
+
+      // Save Customer
+      function save(isValid) {
+        if (!isValid) {
+          $scope.$broadcast('show-errors-check-validity', 'vm.form.customerForm');
+          return false;
+        }
+
+
+        //vm.customer.$update(function (response) {
+        //
+        //  Notify.sendMsg('UpdatedCustomer', { 'id': response._id });
+        //
+        //}, function (errorResponse) {
+        //  $scope.error = errorResponse.data.message;
+        //});
+
+
+        // TODO: move create/update logic to service
+        // if (vm.customer._id) {
+
+        vm.customer.$save(successCallback, errorCallback);
+        $log.info(vm.customer.firstName);
+        $scope.error=vm.error;
+
+        //} else {
+        //  vm.customer.$save(successCallback, errorCallback);
+        // }
+
+        function successCallback(res) {
+          Notify.sendMsg("NewCustomer",{ 'id':res._id });
+          //$state.go('customers.list');
+        }
+
+        function errorCallback(res) {
+          vm.error = res.data.message;
+        }
+      }
+    }
+  ]);
+
 (function () {
   'use strict';
 
@@ -1067,9 +1122,10 @@ angular.module('core').service('Socket', ['Authentication', '$state', '$timeout'
     .module('customers')
     .controller('CustomersController', CustomersController);
 
-  CustomersController.$inject = ['$scope', '$state', 'customerResolve', 'Authentication'];
 
-  function CustomersController($scope, $state, customer, Authentication) {
+  CustomersController.$inject = ['$scope', '$state', 'customerResolve', 'Authentication','$modal','$log','CustomersService'];
+
+  function CustomersController($scope, $state, customer, Authentication,$modal,$log,CustomersService) {
     var vm = this;
 
     vm.customer = customer;
@@ -1078,6 +1134,8 @@ angular.module('core').service('Socket', ['Authentication', '$state', '$timeout'
     vm.form = {};
     vm.remove = remove;
     vm.save = save;
+    vm.modalUpdate=modalUpdate;
+
 
     // Remove existing Customer
     function remove() {
@@ -1086,6 +1144,30 @@ angular.module('core').service('Socket', ['Authentication', '$state', '$timeout'
       }
     }
 
+
+
+    function modalUpdate(size) {
+
+      var modalInstance = $modal.open({
+        //animation: $scope.animationsEnabled,
+        templateUrl: 'modules/customers/client/views/edit-customer.client.view.html',
+        controller: 'modalInstanceCtrl',
+
+        //controllerAs:vm,
+        size: size,
+        resolve: {
+          customer: function () {
+            return vm.customer;
+          }
+        }
+      });
+
+      modalInstance.result.then(function (customer) {
+        // $scope.selected = selectedItem;
+      }, function () {
+        $log.info('modal dismissed at: ' + new Date());
+      });
+    }
     // Save Customer
     function save(isValid) {
       if (!isValid) {
@@ -1111,7 +1193,155 @@ angular.module('core').service('Socket', ['Authentication', '$state', '$timeout'
       }
     }
   }
+
+
+  angular
+    .module('customers')
+    .controller('modalInstanceCtrl', modalInstanceCtrl);
+
+  modalInstanceCtrl.$inject = ['$scope','$modalInstance', 'customer' ];
+  function modalInstanceCtrl($scope, $modalInstance, customer) {
+    $scope.customer = customer;
+    $scope.ok = function () {
+      //if(!$scope.error)
+      $modalInstance.close($scope.customer);
+    };
+
+    $scope.cancel = function () {
+      $modalInstance.dismiss('cancel');
+    };
+
+
+    // $scope.remove = remove;
+
+
+  }
+
 })();
+
+
+//(function () {
+//  'use strict';
+//
+//  angular
+//    .module('customers')
+//    .controller('CustomersController', CustomersController);
+//
+
+//
+//  CustomersController.$inject = ['$scope', '$state', 'customerResolve', 'Authentication','$modal','$log'];
+//
+//  function CustomersController($scope, $state,customer, Authentication,$modal, $log) {
+//    var vm1 = this;
+//
+//    vm1.customer = customer;
+//    vm1.authentication = Authentication;
+//    vm1.error = null;
+//    vm1.form = {};
+//    vm1.remove = remove;
+//    vm1.save = save;
+//
+//    // Remove existing Customer
+//    function remove() {
+//      if (confirm('Are you sure you want to delete?')) {
+//        vm1.customer.$remove($state.go('customers.list'));
+//      }
+//    }
+//
+
+//
+
+
+//
+//     //Save Customer
+//    function save(isValid) {
+//      if (!isValid) {
+//        $scope.$broadcast('show-errors-check-validity', 'vm1.form.customerForm');
+//        return false;
+//      }
+//
+//      // TODO: move create/update logic to service
+//      if (vm1.customer._id) {
+//        $scope.customer.$update(successCallback, errorCallback);
+//      } else {
+//        vm1.customer.$save(successCallback, errorCallback);
+//      }
+//
+//      function successCallback(res) {
+//        $state.go('customers.view', {
+//          customerId: res._id
+//        });
+//      }
+//
+//      function errorCallback(res) {
+//        vm1.error = res.data.message;
+//      }
+//    }
+//  }
+
+
+//})();
+
+'use strict';
+angular
+  .module('customers')
+  .controller('CustomersUpdateController', ['$scope', '$state','$log',
+    function ($scope, $state,$log) {
+      var vm = this;
+      $scope.channelOptions = [
+        { id: 1, item: 'facebook' },
+        { id: 2, item: 'twitter' },
+        { id: 3, item: 'localemail' }
+
+      ];
+      vm.customer = $scope.customer;
+      vm.ok=$scope.ok;
+
+      vm.error = null;
+      vm.form = {};
+      //
+      vm.save = save;
+
+      // Save Customer
+      function save(isValid) {
+        if (!isValid) {
+          $scope.$broadcast('show-errors-check-validity', 'vm.form.customerForm');
+          return false;
+        }
+
+
+        //vm.customer.$update(function (response) {
+        //
+        //  Notify.sendMsg('UpdatedCustomer', { 'id': response._id });
+        //
+        //}, function (errorResponse) {
+        //  $scope.error = errorResponse.data.message;
+        //});
+
+
+        // TODO: move create/update logic to service
+        // if (vm.customer._id) {
+
+        vm.customer.$update(successCallback, errorCallback);
+        $log.info(vm.customer.firstName);
+        $scope.error=vm.error;
+
+        //} else {
+        //  vm.customer.$save(successCallback, errorCallback);
+        // }
+
+        function successCallback(res) {
+          $state.go('customers.view', {
+            customerId: res._id
+          });
+        }
+
+        function errorCallback(res) {
+          vm.error = res.data.message;
+        }
+      }
+    }
+  ]);
 
 (function () {
   'use strict';
@@ -1120,12 +1350,128 @@ angular.module('core').service('Socket', ['Authentication', '$state', '$timeout'
     .module('customers')
     .controller('CustomersListController', CustomersListController);
 
-  CustomersListController.$inject = ['CustomersService'];
+  CustomersListController.$inject = [ 'Authentication','$modal','$log','CustomersService'];
 
-  function CustomersListController(CustomersService) {
+  function CustomersListController(Authentication,$modal,$log,CustomersService) {
+
+
     var vm = this;
 
     vm.customers = CustomersService.query();
+
+
+    vm.authentication = Authentication;
+
+
+
+
+    vm.modalCreate=modalCreate;
+
+    function modalCreate(size) {
+
+      var modalInstance = $modal.open({
+        //animation: $scope.animationsEnabled,
+        templateUrl: 'modules/customers/client/views/create-customer.client.view.html',
+        controller: 'modalInstanceCtrl2',
+
+        //controllerAs:vm,
+        size: size,
+        resolve: {
+          customer: function () {
+            return new CustomersService();
+          }
+        }
+      });
+
+      modalInstance.result.then(function (customer) {
+        // $scope.selected = selectedItem;
+      }, function () {
+        $log.info('modal dismissed at: ' + new Date());
+      });
+    }
+
+  }
+
+  angular
+    .module('customers')
+    .controller('modalInstanceCtrl2', modalInstanceCtrl2);
+
+  modalInstanceCtrl2.$inject = ['$scope','$modalInstance','customer' ];
+  function modalInstanceCtrl2($scope, $modalInstance,customer) {
+    $scope.customer = customer;
+    $scope.ok = function () {
+      //if(!$scope.error)
+      $modalInstance.close($scope.customer);
+    };
+
+    $scope.cancel = function () {
+      $modalInstance.dismiss('cancel');
+    };
+
+
+    // $scope.remove = remove;
+
+
+  }
+
+
+
+  angular.module('customers').directive('customerList', ['CustomersService', 'Notify',function(CustomersService,Notify) {
+    return {
+      restrict: 'E',
+      transclude: true,
+      templateUrl: 'modules/customers/client/views/customer-list-temp.html',
+      link: function(scope, element, attrs){
+        //update customer list when a new customer added
+        Notify.getMsg("NewCustomer",function(event,data){
+          //here we should use the controlleras CLCtrl in rout.js to refer customers, if we use controller name
+          //CustomersListController, it won't work.
+          scope.CLCtrl.customers= CustomersService.query();
+        });
+
+      }
+    };
+  }]);
+})();
+
+(function () {
+  'use strict';
+
+  angular
+    .module('customers')
+    .controller('CustomersViewController', CustomersViewController);
+
+  CustomersViewController.$inject = ['$scope', '$state', '$uibModal', '$log', 'customerResolve', 'Authentication'];
+
+  function CustomersViewController($scope, $state, $uibModal, $log, customer, Authentication) {
+    var vm = this;
+
+    vm.customer = customer;
+    vm.authentication = Authentication;
+
+    $scope.modalUpdate = function (size) {
+
+      var modalInstance = $uibModal.open({
+        //animation: $scope.animationsEnabled,
+        templateUrl: 'modules/customers/client/views/form-customer.client.view.html',
+        controller: ["$scope", "$uibModalInstance", "customer", function ($scope, $uibModalInstance, customer) {
+
+          $scope.customer = customer;
+        }],
+        size: size,
+        resolve: {
+          customer: function () {
+            return $scope.customer;
+          }
+        }
+      });
+
+      modalInstance.result.then(function (selectedItem) {
+        $scope.selected = selectedItem;
+      }, function () {
+        $log.info('Modal dismissed at: ' + new Date());
+      });
+    };
   }
 })();
 
@@ -1146,6 +1492,35 @@ angular.module('core').service('Socket', ['Authentication', '$state', '$timeout'
         method: 'PUT'
       }
     });
+  }
+})();
+
+
+(function () {
+  'use strict';
+
+  angular
+    .module('customers.services')
+    .factory('Notify', Notify);
+
+  Notify.$inject = ['$rootScope'];
+
+  function Notify($rootScope) {
+
+    var notify={};
+    notify.sendMsg=function(msg, data){
+      data=data||{};
+      $rootScope.$emit(msg,data);
+      console.log('message sent');
+    };
+    notify.getMsg=function(msg,func, scope){
+      var unbind=$rootScope.$on(msg,func);
+      if(scope){
+        scope.$on('destroy',unbind);
+      }
+    };
+    return notify;
+
   }
 })();
 
