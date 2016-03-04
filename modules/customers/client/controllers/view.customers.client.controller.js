@@ -12,6 +12,7 @@
 
     vm.customer = customer;
     vm.authentication = Authentication;
+    //vm.emptyspace=;
 
     $scope.modalUpdate = function (size) {
 

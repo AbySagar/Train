@@ -1,7 +1,106 @@
 <section>
   <div class="page-header">
+    <h1 ng-bind="vm.customer.firstName"></h1>
     <h1 ng-bind="vm.customer.surName"></h1>
   </div>
+
+  <div class="col-md-12">
+    <form name="vm.form.customerForm"  ng-submit="vm.save(vm.form.customerForm.$valid)" novalidate>
+      <fieldset>
+        <div class="row">
+          <div class="col-sm-6 text-center">
+            <i class="glyphicon glyphicon-user cust-profile" ng-class="{'text-primary':vm.customer.referred,'text-danger':!vm.customer.referred}"></i>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group" show-errors>
+              <label class="control-label" for="firstName">firstName</label>
+              <p name="firstName" type="text" ng-bind="vm.customer.firstName" id="firstName"   ></p>
+              <div ng-messages="vm.form.customerForm.firstName.$error" role="alert">
+                <p class="help-block error-text" ng-message="required">Customer firstName is required.</p>
+              </div>
+            </div>
+            <div class="form-group" show-errors>
+              <label class="control-label" for="surName">surName</label>
+              <p name="surName" type="text" ng-bind="vm.customer.surName" id="surName"  ></p>
+              <div ng-messages="vm.form.customerForm.surName.$error" role="alert">
+                <p class="help-block error-text" ng-message="required">Customer surName is required.</p>
+              </div>
+            </div>
+            <div class="form-group" show-errors>
+              <label class="control-label" for="suburb">suburb</label>
+              <p name="suburb" type="text" ng-bind="vm.customer.suburb" id="suburb" ></p>
+              <div ng-messages="vm.form.customerForm.suburb.$error" role="alert">
+                <p class="help-block error-text" ng-message="required">Customer suburb is required.</p>
+              </div>
+            </div>
+            <div class="form-group" show-errors>
+              <label class="control-label" for="country">country</label>
+              <p name="country" type="text" ng-bind="vm.customer.country" id="country"   ></p>
+              <div ng-messages="vm.form.customerForm.country.$error" role="alert">
+                <p class="help-block error-text" ng-message="required">Customer country is required.</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6 col-sm-push-6">
+            <div class="form-group" show-errors>
+              <label class="control-label" for="phone">phone</label>
+              <p name="phone" type="text" ng-bind="vm.customer.phone" id="phone" ></p>
+              <div ng-messages="vm.form.customerForm.phone.$error" role="alert">
+                <p class="help-block error-text" ng-message="required">Customer phone is required.</p>
+              </div>
+            </div>
+            <div class="form-group" show-errors>
+              <label class="control-label" for="email">email</label>
+              <p name="email" type="text" ng-bind="vm.customer.email" id="email" ></p>
+              <div ng-messages="vm.form.customerForm.email.$error" role="alert">
+                <p class="help-block error-text" ng-message="required">Customer email is required.</p>
+              </div>
+            </div>
+
+          </div>
+          <div class="col-sm-6 col-sm-pull-6">
+            <div class="form-group" show-errors>
+              <label class="control-label" for="referred">referred</label>
+              <p name="referred"  ng-bind="vm.customer.referred" id="referred"  ></p>
+              <div ng-messages="vm.form.customerForm.referred.$error" role="alert">
+                <p class="help-block error-text" ng-message="required">Customer referred is required.</p>
+              </div>
+            </div>
+            <div class="form-group" show-errors>
+              <label class="control-label" for="channel">channel</label>
+              <p name="channel" type="text" ng-bind="vm.customer.channel" id="channel" ></p>
+              <div ng-messages="vm.form.customerForm.channel.$error" role="alert">
+                <p class="help-block error-text" ng-message="required">Customer channel is required.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="form-group" show-errors>
+              <label class="control-label" for="industry">industry</label>
+              <p name="industry" type="p" ng-bind="vm.customer.industry" id="industry" ></p>
+              <div ng-messages="vm.form.customerForm.industry.$error" role="alert">
+                <p class="help-block error-text" ng-message="required">Customer industry is required.</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+
+
+
+        <div ng-show="vm.error" class="text-danger">
+          <strong ng-bind="vm.error"></strong>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+
   <div class="pull-right" ng-show="vm.authentication.user._id == vm.customer.user._id">
     <a class="btn btn-primary"  ng-click= "vm.modalUpdate('lg')">
 
@@ -26,5 +125,5 @@
       <span ng-if="!vm.customer.user">Deleted User</span>
     </em>
   </small>
-  <p class="lead" ng-bind="vm.customer.firstName"></p>
+
 </section>
